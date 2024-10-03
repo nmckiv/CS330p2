@@ -47,14 +47,14 @@ $('#searchButton').click(function () {
     }
 });
 
-// Function to toggle the background image
-let toggleImage = false;
-$('#searchEngineName').click(function () {
-    let newImage = toggleImage
-        ? 'https://source.unsplash.com/random/1600x900?nature'
-        : 'https://source.unsplash.com/random/1600x900?city';
-    $('body').css('background-image', `url(${newImage})`);
-    toggleImage = !toggleImage; // Toggle the image for the next click
+// Function to toggle the background image using Unsplash API
+$(document).click(function (event) {
+    if (!$(event.target).closest('#searchButton, #timeButton').length) { // Ignore clicks on buttons
+        let randomImageUrl = `https://api.unsplash.com/photos/random?query=puppy&client_id=${unsplashAccessKey}`;
+        $.get(randomImageUrl, function (data) {
+            $('body').css('background-image', `url(${data.urls.regular})`);
+        });
+    }
 });
 
 // Function to get the current time and display in a jQueryUI dialog
@@ -62,7 +62,7 @@ $('#timeButton').click(function () {
     let now = new Date();
     let hours = now.getHours();
     let minutes = now.getMinutes();
-    minutes = minutes < 10 ? '0' + minutes : minutes; // Add leadingzero to minutes
+    minutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero to minutes
     let timeString = hours + ':' + minutes;
 
     $('#time').html(`<p>Current time: ${timeString}</p>`);
