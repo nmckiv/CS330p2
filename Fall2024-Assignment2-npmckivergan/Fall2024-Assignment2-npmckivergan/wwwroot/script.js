@@ -62,7 +62,7 @@ $('#timeButton').click(function () {
     let now = new Date();
     let hours = now.getHours();
     let minutes = now.getMinutes();
-    minutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero to minutes
+    minutes = minutes < 10 ? '0' + minutes : minutes; // Add leadingzero to minutes
     let timeString = hours + ':' + minutes;
 
     $('#time').html(`<p>Current time: ${timeString}</p>`);
