@@ -1,9 +1,10 @@
 // Replace these with your actual Bing Search API URL and key
-const apiUrl = 'https://api.bing.microsoft.com/v7.0/search'; // Use the actual endpoint URL with "/v7.0/search"
+const apiUrl = 'https://api.bing.microsoft.com/v7.0/search'; // Bing Search API endpoint
 const apiKey = '5cfc2670fc954d5486d138575de24ef8'; // Replace with your actual API key
+const unsplashAccessKey = 'C7cTfj8gueMHbhdxwf90TkSjq7-u-7liwGHxjyeCINA'; // Replace with your Unsplash access key
 
 // Function to perform the search using the Bing Search API
-function apiSearch(query) {
+function apiSearch(query, lucky = false) {
     $.ajax({
         url: apiUrl,
         type: 'GET',
@@ -13,7 +14,16 @@ function apiSearch(query) {
         },
         success: function (data) {
             // Handle successful API response and display the results
-            displayResults(data);
+            if (lucky) {
+                // Redirect to the first result if "I'm Feeling Lucky" was clicked
+                if (data.webPages && data.webPages.value.length > 0) {
+                    window.open(data.webPages.value[0].url, '_blank'); // Open first result in a new tab
+                } else {
+                    alert('No results found for your query.');
+                }
+            } else {
+                displayResults(data); // Display regular results
+            }
         },
         error: function (err) {
             console.log('Error: ', err);
@@ -47,13 +57,28 @@ $('#searchButton').click(function () {
     }
 });
 
-// Function to toggle the background image using Unsplash API
+// "I'm Feeling Lucky" button click handler
+$('#luckyButton').click(function () {
+    let query = $('#query').val(); // Get search query from input box
+    if (query) {
+        apiSearch(query, true); // Call the search function with 'lucky' flag
+    } else {
+        alert('Please enter a search query');
+    }
+});
+
+// Function to change the background image to a random puppy
+function changeBackgroundImage() {
+    let randomImageUrl = `https://api.unsplash.com/photos/random?query=puppy&client_id=${unsplashAccessKey}`;
+    $.get(randomImageUrl, function (data) {
+        $('body').css('background-image', `url(${data.urls.regular})`);
+    });
+}
+
+// Change background image on document click, except on buttons
 $(document).click(function (event) {
-    if (!$(event.target).closest('#searchButton, #timeButton').length) { // Ignore clicks on buttons
-        let randomImageUrl = `https://api.unsplash.com/photos/random?query=puppy&client_id=${unsplashAccessKey}`;
-        $.get(randomImageUrl, function (data) {
-            $('body').css('background-image', `url(${data.urls.regular})`);
-        });
+    if (!$(event.target).closest('#searchButton, #timeButton, #luckyButton').length) { // Ignore clicks on buttons
+        changeBackgroundImage();
     }
 });
 

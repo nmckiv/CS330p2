@@ -1,5 +1,6 @@
 /* General body styling */
 body {
+    background-image: url('https://images.unsplash.com/photo-1519150268069-c094cfc0b3c8?q=80&w=1804&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -52,7 +53,8 @@ button {
     }
 
 /* Divs for search results and time initially hidden */
-#searchResults, #time {
+#searchResults,
+#time {
     visibility: hidden;
     background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black for readability */
     padding: 20px;
@@ -61,12 +63,16 @@ button {
 }
 
     /* Custom styling for the search results and time */
-    #searchResults p, #time p {
+    #searchResults p,
+    #time p {
         font-size: 1.2rem;
         margin: 10px 0;
     }
 
 /* Ensure content is visible on the background */
-input, button, #searchResults, #time {
+input,
+button,
+#searchResults,
+#time {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
