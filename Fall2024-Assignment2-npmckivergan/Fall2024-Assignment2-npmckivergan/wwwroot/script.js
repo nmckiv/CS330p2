@@ -93,11 +93,8 @@ function changeBackgroundImage() {
 }
 
 // Change background image on header click
-$(document).click(function (event) {
-    if ($(event.target).closest('#searchEngineName').length) { // Ignore clicks on buttons
-        changeBackgroundImage();
-        $('#searchResults').hide();
-    }
+document.getElementById("searchEngineName").addEventListener("click", function () {
+    changeBackgroundImage();
 });
 
 // Function to get the current time with dialog box
