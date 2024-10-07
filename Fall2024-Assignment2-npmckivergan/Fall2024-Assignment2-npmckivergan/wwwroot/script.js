@@ -56,6 +56,7 @@ function apiSearch(callback) {
 
                 $('#searchResults').html(results);
                 $('#searchResults').show();
+                document.getElementById("searchResults").style.visibility = 'visible';
             }
         })
         .fail(function () {
@@ -66,7 +67,6 @@ function apiSearch(callback) {
 //Search button click handler
 $('#searchButton').on('click', function () {
     apiSearch();
-    document.getElementById("searchResults").style.visibility = 'visible';
 });
 
 // Search on Enter key
