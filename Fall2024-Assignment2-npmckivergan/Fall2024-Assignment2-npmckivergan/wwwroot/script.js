@@ -1,41 +1,37 @@
-// Replace these with your actual Bing Search API URL and key
-const apiUrl = 'https://api.bing.microsoft.com/v7.0/search'; // Bing Search API endpoint
-const apiKey = '5cfc2670fc954d5486d138575de24ef8'; // Replace with your actual API key
-const unsplashAccessKey = 'C7cTfj8gueMHbhdxwf90TkSjq7-u-7liwGHxjyeCINA'; // Replace with your Unsplash access key
+// API stuff
+const apiUrl = 'https://api.bing.microsoft.com/v7.0/search';
+const apiKey = '5cfc2670fc954d5486d138575de24ef8';
+const unsplashAccessKey = 'C7cTfj8gueMHbhdxwf90TkSjq7-u-7liwGHxjyeCINA';
 
-// Function to perform the search using the Bing Search API
+// Bing API search function
 function apiSearch(query, lucky = false) {
     $.ajax({
         url: apiUrl,
         type: 'GET',
-        data: { q: query }, // Bing search query
+        data: { q: query }, 
         beforeSend: function (xhr) {
             xhr.setRequestHeader('Ocp-Apim-Subscription-Key', apiKey);
         },
         success: function (data) {
-            // Handle successful API response and display the results
+            // Redirect if I'm Feeling Lucky was hit
             if (lucky) {
-                // Redirect to the first result if "I'm Feeling Lucky" was clicked
                 if (data.webPages && data.webPages.value.length > 0) {
-                    window.open(data.webPages.value[0].url, '_blank'); // Open first result in a new tab
+                    window.open(data.webPages.value[0].url, '_blank');
                 } else {
                     alert('No results found for your query.');
                 }
             } else {
-                displayResults(data); // Display regular results
+                // Display results normally
+                displayResults(data);
             }
         },
-        error: function (err) {
-            console.log('Error: ', err);
-            alert('Something went wrong with the API request!');
-        }
     });
 }
 
 // Function to display search results
 function displayResults(data) {
     let resultsDiv = $('#searchResults');
-    resultsDiv.empty(); // Clear any previous results
+    resultsDiv.empty();
     if (data.webPages && data.webPages.value.length > 0) {
         data.webPages.value.forEach(function (result) {
             let resultHtml = `<p><a href="${result.url}" target="_blank">${result.name}</a><br>${result.snippet}</p>`;
@@ -44,24 +40,32 @@ function displayResults(data) {
     } else {
         resultsDiv.append('<p>No results found</p>');
     }
-    resultsDiv.css('visibility', 'visible'); // Show the results div
+    resultsDiv.css('visibility', 'visible');
 }
 
 // Search button click handler
 $('#searchButton').click(function () {
-    let query = $('#query').val(); // Get search query from input box
+    let query = $('#query').val();
     if (query) {
-        apiSearch(query); // Call the search function
+        apiSearch(query);
     } else {
         alert('Please enter a search query');
     }
 });
 
+// Search on Enter key
+$('#query').keydown(function (event) {
+    if (event.key === "Enter" || event.keyCode === 13) {
+        event.preventDefault();
+        $('#searchButton').click();
+    }
+});
+
 // "I'm Feeling Lucky" button click handler
 $('#luckyButton').click(function () {
-    let query = $('#query').val(); // Get search query from input box
+    let query = $('#query').val();
     if (query) {
-        apiSearch(query, true); // Call the search function with 'lucky' flag
+        apiSearch(query, true);
     } else {
         alert('Please enter a search query');
     }
@@ -77,20 +81,21 @@ function changeBackgroundImage() {
 
 // Change background image on document click, except on buttons
 $(document).click(function (event) {
-    if (!$(event.target).closest('#searchButton, #timeButton, #luckyButton').length) { // Ignore clicks on buttons
+    if (!$(event.target).closest('#searchButton, #timeButton, #luckyButton, #query, #searchResults').length) { // Ignore clicks on buttons
         changeBackgroundImage();
+        $('#searchResults').hide();
     }
 });
 
-// Function to get the current time and display in a jQueryUI dialog
+// Function to get the current time with dialog box
 $('#timeButton').click(function () {
     let now = new Date();
     let hours = now.getHours();
     let minutes = now.getMinutes();
-    minutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero to minutes
+    minutes = minutes < 10 ? '0' + minutes : minutes;
     let timeString = hours + ':' + minutes;
 
     $('#time').html(`<p>Current time: ${timeString}</p>`);
     $('#time').css('visibility', 'visible');
-    $('#time').dialog({ title: 'Current Time' }); // Display time in a jQueryUI dialog box
+    $('#time').dialog({ title: 'Current Time' });
 });
